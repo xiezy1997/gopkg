@@ -2,14 +2,14 @@ package queue
 
 import "context"
 
-type queue[T any] struct {
+type queue struct {
 	startIdx int
 	endIdx   int
 	length   int
-	dataList []T
+	dataList []interface{}
 }
 
-func (q *queue[T]) Push(ctx context.Context, data T) error {
+func (q *queue) Push(ctx context.Context, data interface{}) error {
 	if q.IsFull(ctx) {
 		return CapacityError
 	}
@@ -18,73 +18,61 @@ func (q *queue[T]) Push(ctx context.Context, data T) error {
 	return nil
 }
 
-func (q *queue[T]) Pop(ctx context.Context) {
+func (q *queue) Pop(ctx context.Context) {
 	if q.IsEmpty(ctx) {
 		return
 	}
 	q.startIdx = (q.startIdx + 1) % (q.length + spareCnt)
 }
 
-func (q *queue[T]) Size(ctx context.Context) int {
+func (q *queue) Size(ctx context.Context) int {
 	if q.startIdx <= q.endIdx {
 		return q.endIdx - q.startIdx
 	}
 	return q.length + spareCnt - q.startIdx + q.endIdx
 }
 
-func (q *queue[T]) Capacity(ctx context.Context) int {
+func (q *queue) Capacity(ctx context.Context) int {
 	return q.length
 }
 
-func (q *queue[T]) IsEmpty(ctx context.Context) bool {
+func (q *queue) IsEmpty(ctx context.Context) bool {
 	return q.startIdx == q.endIdx
 }
 
-func (q *queue[T]) IsFull(ctx context.Context) bool {
+func (q *queue) IsFull(ctx context.Context) bool {
 	return q.Size(ctx) == q.length
 }
 
-func (q *queue[T]) Front(ctx context.Context) (T, error) {
+func (q *queue) Front(ctx context.Context) (interface{}, error) {
 	if q.IsEmpty(ctx) {
-		var t T
-		return t, EmptyError
+		return nil, EmptyError
 	}
 	return q.dataList[q.startIdx], nil
 }
 
-func (q *queue[T]) Back(ctx context.Context) (T, error) {
+func (q *queue) Back(ctx context.Context) (interface{}, error) {
 	if q.IsEmpty(ctx) {
-		var t T
-		return t, EmptyError
+		return nil, EmptyError
 	}
 	return q.dataList[q.endIdx-1], nil
 }
 
-func (q *queue[T]) DataList(ctx context.Context) []T {
+func (q *queue) DataList(ctx context.Context) []interface{} {
 	if q.IsEmpty(ctx) {
-		return []T{}
+		return []interface{}{}
 	}
 	if q.startIdx < q.endIdx {
 		return q.dataList[q.startIdx:q.endIdx]
 	}
-	data := make([]T, q.Size(ctx))
-	idx := 0
-	for i := q.startIdx; i < q.length+spareCnt; i++ {
-		data[idx] = q.dataList[i]
-		idx++
-	}
-	for i := 0; i < q.endIdx; i++ {
-		data[idx] = q.dataList[i]
-		idx++
-	}
-	return data
+	return append(q.dataList[q.startIdx:q.length+spareCnt], q.dataList[:q.endIdx]...)
 }
 
-func NewQueue[T any](length int) IQueue[T] {
-	return &queue[T]{
+func NewQueue(length int) IQueue {
+	return &queue{
 		startIdx: 0,
 		endIdx:   0,
 		length:   length,
-		dataList: make([]T, length+spareCnt),
+		dataList: make([]interface{}, length+spareCnt),
 	}
 }

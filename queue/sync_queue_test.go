@@ -7,7 +7,7 @@ import (
 )
 
 func TestSyncQueue(t *testing.T) {
-	q := NewSyncQueue[int](5)
+	q := NewSyncQueue(5)
 	ctx := context.Background()
 	for i := 1; i <= 6; i++ {
 		fmt.Printf("queue size=%v ", q.Size(ctx))

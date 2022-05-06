@@ -7,7 +7,7 @@ import (
 )
 
 func TestQueue(t *testing.T) {
-	q := NewQueue[int](5)
+	q := NewQueue(5)
 	ctx := context.Background()
 	for i := 1; i <= 6; i++ {
 		fmt.Printf("queue size=%v ", q.Size(ctx))
@@ -36,7 +36,7 @@ func TestStructQueue(t *testing.T) {
 	type Task struct {
 		id int
 	}
-	q := NewQueue[*Task](5)
+	q := NewQueue(5)
 	ctx := context.Background()
 	for i := 1; i <= 6; i++ {
 		fmt.Printf("queue size=%v ", q.Size(ctx))

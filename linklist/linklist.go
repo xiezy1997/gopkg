@@ -4,30 +4,28 @@ import (
 	"context"
 )
 
-type LinkList[T any] struct {
-	head *node[T]
-	tail *node[T]
+type LinkList struct {
+	head *node
+	tail *node
 	cnt  int
 }
 
-func (l *LinkList[T]) Head(ctx context.Context) (T, error) {
+func (l *LinkList) Head(ctx context.Context) (interface{}, error) {
 	if l.cnt == 0 {
-		var data T
-		return data, EmptyError
+		return nil, EmptyError
 	}
 	return l.head.data, nil
 }
 
-func (l *LinkList[T]) Tail(ctx context.Context) (T, error) {
+func (l *LinkList) Tail(ctx context.Context) (interface{}, error) {
 	if l.cnt == 0 {
-		var data T
-		return data, EmptyError
+		return nil, EmptyError
 	}
 	return l.tail.data, nil
 }
 
-func (l *LinkList[T]) InsertToHead(ctx context.Context, data T) {
-	node := newNode[T]().setData(data).setNext(l.head)
+func (l *LinkList) InsertToHead(ctx context.Context, data interface{}) {
+	node := newNode().setData(data).setNext(l.head)
 	l.head = node
 	l.cnt++
 	if l.tail == nil {
@@ -36,8 +34,8 @@ func (l *LinkList[T]) InsertToHead(ctx context.Context, data T) {
 	}
 }
 
-func (l *LinkList[T]) InsertToTail(ctx context.Context, data T) {
-	node := newNode[T]().setData(data)
+func (l *LinkList) InsertToTail(ctx context.Context, data interface{}) {
+	node := newNode().setData(data)
 	l.cnt++
 	if l.cnt == 1 {
 		l.head = node
@@ -48,7 +46,7 @@ func (l *LinkList[T]) InsertToTail(ctx context.Context, data T) {
 	l.tail = node
 }
 
-func (l *LinkList[T]) DeleteFromHead(ctx context.Context) error {
+func (l *LinkList) DeleteFromHead(ctx context.Context) error {
 	if l.cnt == 0 {
 		return EmptyError
 	}
@@ -61,8 +59,8 @@ func (l *LinkList[T]) DeleteFromHead(ctx context.Context) error {
 	return nil
 }
 
-func (l *LinkList[T]) DeleteNode(ctx context.Context, delNode T, eqFunc func(dataNode, delNode T) bool) error {
-	var p, pre, head, tail *node[T]
+func (l *LinkList) DeleteNode(ctx context.Context, delNode interface{}, eqFunc func(dataNode, delNode interface{}) bool) error {
+	var p, pre, head, tail *node
 	for p = l.head; p != nil; p = p.next {
 		if eqFunc(p.data, delNode) {
 			l.cnt--
@@ -83,24 +81,23 @@ func (l *LinkList[T]) DeleteNode(ctx context.Context, delNode T, eqFunc func(dat
 	return nil
 }
 
-func (l *LinkList[T]) Size(ctx context.Context) int {
+func (l *LinkList) Size(ctx context.Context) int {
 	return l.cnt
 }
 
-func (l *LinkList[T]) IsEmpty(ctx context.Context) bool {
+func (l *LinkList) IsEmpty(ctx context.Context) bool {
 	return l.cnt == 0
 }
 
-func (l *LinkList[T]) Clear(ctx context.Context) {
+func (l *LinkList) Clear(ctx context.Context) {
 	l.init()
 }
 
-func (l *LinkList[T]) Iterator(ctx context.Context) func() (T, bool) {
+func (l *LinkList) Iterator(ctx context.Context) func() (interface{}, bool) {
 	p := l.head
-	return func() (T, bool) {
+	return func() (interface{}, bool) {
 		if p == nil {
-			var t T
-			return t, true
+			return nil, true
 		}
 		data := p.data
 		p = p.next
@@ -108,12 +105,12 @@ func (l *LinkList[T]) Iterator(ctx context.Context) func() (T, bool) {
 	}
 }
 
-func (l *LinkList[T]) init() {
+func (l *LinkList) init() {
 	l.tail = nil
 	l.head = nil
 	l.cnt = 0
 }
 
-func NewLinkList[T any]() ILinkList[T] {
-	return &LinkList[T]{}
+func NewLinkList() ILinkList {
+	return &LinkList{}
 }

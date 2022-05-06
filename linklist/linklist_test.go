@@ -7,7 +7,7 @@ import (
 )
 
 func TestLinkList(t *testing.T) {
-	list := NewLinkList[int]()
+	list := NewLinkList()
 	ctx := context.Background()
 	fmt.Println("初始化")
 	fmt.Println(list.IsEmpty(ctx))
@@ -106,8 +106,8 @@ func TestLinkList(t *testing.T) {
 		fmt.Printf("%v ", data)
 	}
 	fmt.Printf("\n删除节点2\n")
-	_ = list.DeleteNode(ctx, 2, func(delNode, dataNode int) bool {
-		if delNode == dataNode {
+	_ = list.DeleteNode(ctx, 2, func(delNode, dataNode interface{}) bool {
+		if delNode.(int) == dataNode.(int) {
 			return true
 		}
 		return false
@@ -121,8 +121,8 @@ func TestLinkList(t *testing.T) {
 		fmt.Printf("%v ", data)
 	}
 	fmt.Printf("\n删除节点3\n")
-	_ = list.DeleteNode(ctx, 3, func(delNode, dataNode int) bool {
-		if delNode == dataNode {
+	_ = list.DeleteNode(ctx, 3, func(delNode, dataNode interface{}) bool {
+		if delNode.(int) == dataNode.(int) {
 			return true
 		}
 		return false

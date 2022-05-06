@@ -6,21 +6,21 @@ var (
 	EmptyError = errors.New("queue is empty") // 链表为空
 )
 
-type node[T any] struct {
-	data T
-	next *node[T]
+type node struct {
+	data interface{}
+	next *node
 }
 
-func newNode[T any]() *node[T] {
-	return &node[T]{}
+func newNode() *node {
+	return &node{}
 }
 
-func (n *node[T]) setData(data T) *node[T] {
+func (n *node) setData(data interface{}) *node {
 	n.data = data
 	return n
 }
 
-func (n *node[T]) setNext(next *node[T]) *node[T] {
+func (n *node) setNext(next *node) *node {
 	n.next = next
 	return n
 }
