@@ -1,3 +1,3 @@
-module code.byted.org/xzy/toolpkg
+module github.com/xiezy1997/gopkg
 
 go 1.18
