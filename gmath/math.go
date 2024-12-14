@@ -1,50 +1,94 @@
 package gmath
 
-func Min[t ComparableType](a t, b ...t) t {
-	for _, v := range b {
-		if a > v {
-			a = v
-		}
-	}
-	return a
+type ComparableType interface {
+	NumberType | string
 }
 
-func Max[t ComparableType](a t, b ...t) t {
-	for _, v := range b {
-		if a < v {
-			a = v
-		}
-	}
-	return a
+type NumberType interface {
+	IntType | FloatType
 }
 
-func IdxMin[t ComparableType](a t, b ...t) (int, t) {
+type FloatType interface {
+	float32 | float64
+}
+
+type IntType interface {
+	int | int8 | int16 | int32 | int64 |
+		uint | uint8 | uint16 | uint32 | uint64
+}
+
+// Min The Min function in Go returns the smallest value among the input values.
+// @param v0
+// @param vs
+// @return min value
+func Min[t ComparableType](v0 t, vs ...t) t {
+	for _, v := range vs {
+		if v0 > v {
+			v0 = v
+		}
+	}
+	return v0
+}
+
+// Max The Max function in Go returns the maximum value among a variable number of input values.
+// @param v0
+// @param vs
+// @return max value
+func Max[t ComparableType](v0 t, vs ...t) t {
+	for _, v := range vs {
+		if v0 < v {
+			v0 = v
+		}
+	}
+	return v0
+}
+
+// IdxMin The function IdxMin finds the index and value of the minimum element in a list of comparable
+// elements.
+// @param v0
+// @param vs
+// @return min value index
+// @return min value
+func IdxMin[t ComparableType](v0 t, vs ...t) (int, t) {
 	idx := 0
-	for i, v := range b {
-		if a > v {
-			a, idx = v, i+1
+	for i, v := range vs {
+		if v0 > v {
+			v0, idx = v, i+1
 		}
 	}
-	return idx, a
+	return idx, v0
 }
 
-func IdxMax[t ComparableType](a t, b ...t) (int, t) {
+// IdxMax The function IdxMax finds the index and value of the maximum element in a slice of comparable types.
+// @param v0
+// @param vs
+// @return max value index
+// @return max value
+func IdxMax[t ComparableType](v0 t, vs ...t) (int, t) {
 	idx := 0
-	for i, v := range b {
-		if a < v {
-			a, idx = v, i+1
+	for i, v := range vs {
+		if v0 < v {
+			v0, idx = v, i+1
 		}
 	}
-	return idx, a
+	return idx, v0
 }
 
-func Abs[t NumberType](a t) t {
-	if a > 0 {
-		return a
+// Abs The function Abs calculates the absolute value of a given number.
+// @param num
+// @return abs(num)
+func Abs[t NumberType](num t) t {
+	if num > 0 {
+		return num
 	}
-	return -a
+	return -num
 }
 
+// Mod The Mod function calculates the modulo operation for two integers, handling negative numbers
+// appropriately.
+// @param num
+// @param mod
+// @return num % mod
 func Mod[t IntType](num, mod t) t {
 	if num < 0 {
 		return (num%mod + mod) % mod
@@ -52,6 +96,11 @@ func Mod[t IntType](num, mod t) t {
 	return num % mod
 }
 
+// Pwd The function `Pwd` calculates the power of a given base to a specified exponent using an optimized
+// algorithm.
+// @param base
+// @param exp
+// @return base ^ exp
 func Pwd[t IntType](base t, exp int) t {
 	res := t(1)
 	for ; exp > 0; exp /= 2 {
@@ -63,6 +112,12 @@ func Pwd[t IntType](base t, exp int) t {
 	return res
 }
 
+// PwdMod The function `PwdMod` calculates the modular exponentiation of a base raised to an exponent with a
+// given modulus.
+// @param base
+// @param exp
+// @param mod
+// @return (base ^ exp) % mod
 func PwdMod[t IntType](base t, exp int, mod t) t {
 	res := t(1)
 	for ; exp > 0; exp /= 2 {

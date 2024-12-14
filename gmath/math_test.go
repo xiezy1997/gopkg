@@ -7,7 +7,7 @@ import (
 	"xiezy1997/gopkg/gmath"
 )
 
-func Test(t *testing.T) {
+func TestMain(t *testing.T) {
 	fmt.Println(gmath.Max(1, 2))
 	fmt.Println(gmath.Max(1.2, 1.3))
 	fmt.Println(gmath.Max("a", "ab", "ac"))
