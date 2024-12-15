@@ -1,6 +1,6 @@
 package gqueue
 
-type Queue[t any] struct {
+type queue[t any] struct {
 	items []t
 	len   int
 }
@@ -9,24 +9,24 @@ type Queue[t any] struct {
 //
 //	@return *Queue
 func NewQueue[t any]() IQueue[t] {
-	return &Queue[t]{make([]t, 0), 0}
+	return &queue[t]{make([]t, 0), 0}
 }
 
-func (q *Queue[t]) IsEmpty() bool { return q.len == 0 }
+func (q *queue[t]) IsEmpty() bool { return q.len == 0 }
 
-func (q *Queue[t]) Size() int { return q.len }
+func (q *queue[t]) Size() int { return q.len }
 
-func (q *Queue[t]) Clear() {
+func (q *queue[t]) Clear() {
 	q.items = q.items[:0]
 	q.len = 0
 }
 
-func (q *Queue[t]) TPush(item t) {
+func (q *queue[t]) TPush(item t) {
 	q.items = append(q.items, item)
 	q.len += 1
 }
 
-func (q *Queue[t]) TPop() (t, bool) {
+func (q *queue[t]) TPop() (t, bool) {
 	if q.IsEmpty() {
 		var tmp t
 		return tmp, false
